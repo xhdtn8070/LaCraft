@@ -1,0 +1,5 @@
+rootProject.name = 'LaCraft'
+include 'la-craft-util'
+include 'la-craft-economy'
+include 'la-craft-virtual-inventory'
+
