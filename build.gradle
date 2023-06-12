@@ -1,19 +1,21 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.johnrengelman:shadow:8.1.1"
+    }
+}
+
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'org.lacraft'
 version = '1.0-SNAPSHOT'
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
 
 test {
     useJUnitPlatform()
@@ -21,6 +23,11 @@ test {
 
 subprojects {
     apply plugin: 'java'
+    apply plugin: "com.github.johnrengelman.shadow"
+
+//    configurations {
+//        shadowImplementation.extendsFrom implementation
+//    }
 
     repositories {
         mavenCentral()
@@ -38,8 +45,7 @@ subprojects {
         implementation 'org.flywaydb:flyway-core:7.15.0' // Flyway 추가
     }
 
-    shadowJar {
-        configurations = [project.configurations.implementation]
-    }
+//    shadowJar {
+//        configurations = [project.configurations.shadowImplementation]
+//    }
 }
-
