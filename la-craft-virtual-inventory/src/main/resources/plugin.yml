@@ -1,4 +1,4 @@
 name: la-craft-virtual-inventory
-version: '${version}'
+version: 1
 main: org.lacraft.lacraftvirtualinventory.LaCraftVirtualInventory
-api-version: 1.19
+api-version: '1.20'
