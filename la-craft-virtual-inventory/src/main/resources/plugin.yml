@@ -1,4 +1,5 @@
 name: la-craft-virtual-inventory
 version: 1
-main: org.lacraft.lacraftvirtualinventory.LaCraftVirtualInventory
+main: org.lacraft.virtualinventory.LaVirtualInventory
 api-version: '1.20'
+depend: ['la-craft-util']

@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
 
-public final class Util extends JavaPlugin {
+public final class LaUtil extends JavaPlugin {
 
     @Override
     public void onLoad() {

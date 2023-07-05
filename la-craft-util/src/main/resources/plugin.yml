@@ -1,4 +1,4 @@
 name: la-craft-util
 version: 1
-main: org.lacraft.util.Util
+main: org.lacraft.util.LaUtil
 api-version: '1.20'

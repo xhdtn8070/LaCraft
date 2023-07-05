@@ -1,25 +1,25 @@
 package org.lacraft.minigame;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.lacraft.util.Util;
+import org.lacraft.util.LaUtil;
 
-public final class MiniGame extends JavaPlugin{
+public final class LaMiniGame extends JavaPlugin{
 
     @Override
     public void onLoad() {
-        Util.sendConsoleMessage("&미니게임 서버 onLoad");
+        LaUtil.sendConsoleMessage("&미니게임 서버 onLoad");
         super.onLoad();
     }
 
     @Override
     public void onDisable() {
-        Util.sendConsoleMessage("&미니게임 서버 onDisable");
+        LaUtil.sendConsoleMessage("&미니게임 서버 onDisable");
         super.onDisable();
     }
 
     @Override
     public void onEnable() {
-        Util.sendConsoleMessage("&미니게임 서버 onEnable");
+        LaUtil.sendConsoleMessage("&미니게임 서버 onEnable");
         super.onEnable();
     }
 }

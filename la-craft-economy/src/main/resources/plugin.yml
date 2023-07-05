@@ -1,0 +1,5 @@
+name: la-craft-economy
+version: 1
+main: org.lacraft.economy.LaEconomy
+api-version: '1.20'
+depend: ['la-craft-util']
