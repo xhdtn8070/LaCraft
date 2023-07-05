@@ -1,19 +1,5 @@
-plugins {
-    id 'java'
-}
-
-group = 'org.lacraft'
-version = '1.0-SNAPSHOT'
-
-repositories {
-    mavenCentral()
-}
-
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.9.1')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
-}
-
-test {
-    useJUnitPlatform()
+    implementation 'org.flywaydb:flyway-core:7.15.0' // Flyway 추가
+    implementation "net.kyori:adventure-api:4.14.0"
+    implementation "net.kyori:adventure-text-minimessage:4.14.0"
 }
