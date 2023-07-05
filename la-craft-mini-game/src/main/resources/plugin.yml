@@ -1,0 +1,5 @@
+name: la-craft-mini-game
+version: 1
+main: org.lacraft.minigame.MiniGame
+api-version: '1.20'
+depend: ['la-craft-util']

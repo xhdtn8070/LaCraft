@@ -24,11 +24,7 @@ test {
 subprojects {
     apply plugin: 'java'
     apply plugin: "com.github.johnrengelman.shadow"
-
-//    configurations {
-//        shadowImplementation.extendsFrom implementation
-//    }
-
+    
     repositories {
         mavenCentral()
         maven {
@@ -41,11 +37,6 @@ subprojects {
         compileOnly "io.papermc.paper:paper-api:1.20-R0.1-SNAPSHOT"
         compileOnly 'org.projectlombok:lombok:1.18.22' // 롬복 추가
         annotationProcessor 'org.projectlombok:lombok:1.18.22' // 롬복 annotation processor 추가
-
-        implementation 'org.flywaydb:flyway-core:7.15.0' // Flyway 추가
     }
 
-//    shadowJar {
-//        configurations = [project.configurations.shadowImplementation]
-//    }
 }
