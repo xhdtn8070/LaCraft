@@ -1,0 +1,35 @@
+init: "&f[&dVI&f] &2Running &bVirtual Inventory {#version}.\n&9Use &a/vi help &9to view available commands."
+help:
+  - "&a/vi"
+  - "&a/vi info"
+  - "&a/vi {help or h}"
+  - "&a/vi opt"
+  - "&a/vi {name or n} {#displayName}"
+  - "&a/vi {list or l}"
+  - "&a/vi {list or l} {#userName}"
+  - "&a/vi {create or c} {#InventoryName}"
+  - "&a/vi {open or o} {#InventoryName}"
+  - "&a/vi {open or o} {#userName} {#InventoryName}"
+  - "&a/vi {remove or rm} {#InventoryName}"
+  - "&a/vi {remove or rm} {#userName} {#InventoryName}"
+  - "&a/vi saveAll"
+info:
+  - "&aVirtualInventory-1.1\n\t가상 인벤토리 플러그인"
+  - "&a이 플러그인은 &9가상 창고&a를 제공하는 플러그인이다."
+  - "&a퍼미션\n&e\t-vc.admin"
+  - "&e참조 : &6https://github.com/xhdtn8070/Virtual-Inventory"
+
+message:
+  inventory:
+    start: "&aVirtual Inventroy start and load..."
+    stop: "&aVirtual Inventroy stop and save..."
+    title: "#{playerName} 님의 인벤토리 #{inventoryName}"
+    already-exists: "&c이미 같은 이름의 가상 인벤토리가 존재합니다."
+    no-exists: "&c플레이어의 인벤토리 #{inventoryName}가 존재하지 않습니다."
+    create-error: "&c창고를 더 이상 생성할 수 없습니다."
+    remove: "&a인벤토리가 삭제되었습니다."
+  player:
+    no-exists-online: "&c해당 플레이어가 온라인에 존재하지 않습니다."
+    no-exists: "&c존재하지 않는 플레이어입니다."
+    non-player: "&c플레이어가 아닙니다. 플레이어로 입력해주시기 바랍니다."
+    no-allowed-permission: "&aYou do not have \"&e#{permission}&a\" permission to run that command"

@@ -16,6 +16,8 @@ plugins {
 group = 'org.lacraft'
 version = '1.0-SNAPSHOT'
 
+sourceCompatibility = '1.8' // java version
+targetCompatibility = '1.8' // java version
 
 test {
     useJUnitPlatform()
@@ -24,12 +26,19 @@ test {
 subprojects {
     apply plugin: 'java'
     apply plugin: "com.github.johnrengelman.shadow"
-    
+
     repositories {
         mavenCentral()
         maven {
             name = "papermc-repo"
             url = "https://repo.papermc.io/repository/maven-public/"
+        }
+        // Add Maven repositories from the previous project
+        maven {
+            url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+        }
+        maven {
+            url 'https://oss.sonatype.org/content/groups/public/'
         }
     }
 
@@ -41,6 +50,10 @@ subprojects {
         compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
         compileOnly 'org.projectlombok:lombok:1.18.22' // 롬복 추가
         annotationProcessor 'org.projectlombok:lombok:1.18.22' // 롬복 annotation processor 추가
-    }
 
+        // Add dependencies from the previous project
+        compileOnly 'org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT'
+        implementation 'commons-codec:commons-codec:1.14'
+        implementation 'commons-io:commons-io:2.6'
+    }
 }

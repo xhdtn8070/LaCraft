@@ -1,0 +1,23 @@
+
+tab:
+  init:
+    - "info"
+    - "i"
+    - "help"
+    - "h"
+    - "opt"
+    - "name"
+    - "n"
+    - "list"
+    - "l"
+    - "create"
+    - "c"
+    - "open"
+    - "o"
+    - "openother"
+    - "oo"
+    - "remove"
+    - "rm"
+    - "removeother"
+    - "rmo"
+    - "saveAll"
