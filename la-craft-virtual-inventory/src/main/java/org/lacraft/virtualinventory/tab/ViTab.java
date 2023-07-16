@@ -12,8 +12,8 @@ import java.util.List;
 
 public class ViTab implements TabCompleter {
     private LaVirtualInventory LaVirtualInventory;
-    public ViTab(LaVirtualInventory virtualInventoryPlugin) {
-        this.LaVirtualInventory = virtualInventoryPlugin;
+    public ViTab(LaVirtualInventory LaVirtualInventory) {
+        this.LaVirtualInventory = LaVirtualInventory;
     }
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -73,7 +73,7 @@ public class ViTab implements TabCompleter {
          */
         if(args.length==2 && (args[0].equalsIgnoreCase("c")
                 || args[0].equalsIgnoreCase("create"))){
-             return result;
+            return result;
         }
 
         /**

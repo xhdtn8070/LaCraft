@@ -54,9 +54,6 @@ public final class LaVirtualInventory extends JavaPlugin {
             e.printStackTrace();
         }
 
-        String message = ChatColor.translateAlternateColorCodes('&',this.messageConfig.getConfig().getString("message.inventory.start"));
-        Bukkit.getConsoleSender().spigot().sendMessage(TextComponent.fromLegacyText(message));
-
         this.virtualInventoryManager = new VirtualInventoryManager(this,new File(getDataFolder(), "inventory"));
         try{
             virtualInventoryManager.load();
@@ -79,9 +76,6 @@ public final class LaVirtualInventory extends JavaPlugin {
         sendConsoleMessage("&가상 인벤토리 서버 onDisable");
         super.onLoad();
 
-        // Plugin shutdown logic
-        String message = ChatColor.translateAlternateColorCodes('&',this.messageConfig.getConfig().getString("message.inventory.stop"));
-        Bukkit.getConsoleSender().spigot().sendMessage(TextComponent.fromLegacyText(message));
         try {
             this.virtualInventoryManager.saveAll(true);
         } catch (IOException e) {
@@ -89,20 +83,16 @@ public final class LaVirtualInventory extends JavaPlugin {
         }
     }
 
-    private void repeatSaveVirtualInventory(){
+    private void repeatSaveVirtualInventory() {
         int second = this.getConfig().getInt("auto-save");
-        if(second!=0){
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        virtualInventoryManager.saveAll(false);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        if (second != 0) {
+            Bukkit.getScheduler().runTaskTimerAsynchronously(this, () -> {
+                try {
+                    virtualInventoryManager.saveAll(false);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            }, 0L, second*20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
-
+            }, 0L, second * 20L); //0 Tick initial delay, 20 Tick (1 Second) between repeats
         }
     }
 

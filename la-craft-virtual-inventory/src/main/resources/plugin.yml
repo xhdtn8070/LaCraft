@@ -1,10 +1,11 @@
-name: VirturalInventoryPlugin
-version: ${project.version}
+name: la-craft-virtual-inventory
+version: 1
 main: org.lacraft.virtualinventory.LaVirtualInventory
-api-version: 1.16
+api-version: '1.20'
 authors: [tikim]
 description: 가상 인벤토리를 위한 플러그인
-website: github.com/xhdtn8070
+website: github.com/xhdtn8070/LaCraft
+depend: ['la-craft-util']
 
 commands:
   vi:                                            # 명령어 이름

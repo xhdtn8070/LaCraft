@@ -1,12 +1,12 @@
 package org.lacraft.virtualinventory.command;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
+import org.lacraft.util.LaUtil;
 import org.lacraft.virtualinventory.LaVirtualInventory;
 import org.lacraft.virtualinventory.domain.VirtualInventory;
 
@@ -173,8 +173,7 @@ public class ViCommand implements CommandExecutor {
     }
 
     private void getInit(CommandSender sender) {
-        String init = this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("init");
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',init.replace("{#version}",this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getDescription().getVersion())));
+        SendMessageConfigString(sender, "init");
     }
 
     private void saveAll(CommandSender sender) throws IOException {
@@ -207,13 +206,12 @@ public class ViCommand implements CommandExecutor {
         if(sender.hasPermission(permission)){
             return true;
         }
-        String message = this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("message.player.no-allowed-permission");
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',message.replace("#{permission}",permission)));
+        SendMessageConfigString(sender, "message.player.no-allowed-permission");
         return false;
     }
     public boolean checkPlayer(CommandSender sender, Player player){
         if(player==null){
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("message.player.no-exists")));
+            SendMessageConfigString(sender,"message.player.no-exists");
             return false;
         }
         return true;
@@ -222,7 +220,7 @@ public class ViCommand implements CommandExecutor {
         if(sender instanceof Player) {
             return true;
         }
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("message.player.non-player")));
+        SendMessageConfigString(sender,"message.player.non-player");
         return false;
     }
     private void getOtherInventory(CommandSender sender, String name, String inventoryName) {
@@ -243,7 +241,8 @@ public class ViCommand implements CommandExecutor {
     }
     private void openInventory(Player player,VirtualInventory virtualInventory,String inventoryName){
         if(virtualInventory==null){
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("message.inventory.no-exists").replace("#{inventoryName}",inventoryName)));
+            SendMessageConfigString(player, "message.inventory.no-exists", inventoryName);
+            //player.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("message.inventory.no-exists").replace("#{inventoryName}",inventoryName)));
             return;
         }
         player.openInventory(virtualInventory.getInventory());
@@ -271,7 +270,6 @@ public class ViCommand implements CommandExecutor {
     private void getMyList(CommandSender sender) {
         if(isPlayer(sender)) {
             printList(sender,this.LaVirtualInventory.virtualInventoryManager.getList((Player) sender));
-            return;
         }
     }
 
@@ -286,33 +284,37 @@ public class ViCommand implements CommandExecutor {
         printList(sender,this.LaVirtualInventory.virtualInventoryManager.getList(targetPlayer));
     }
     private void printList(CommandSender sender,List<String> list){
-        sender.sendMessage(ChatColor.YELLOW +"lists :");
+        LaUtil.SendPlayerMessage(sender, "<YELLOW>lists :</YELLOW>");
+        //sender.sendMessage(ChatColor.YELLOW +"lists :");
         if (list==null){
             return;
         }
         for(String inventoryName : list){
-            sender.sendMessage(ChatColor.GREEN+inventoryName);
+            LaUtil.SendPlayerMessage(sender, "<GREEN>" + inventoryName + "</GREEN>");
+            //sender.sendMessage(ChatColor.GREEN+inventoryName);
         }
     }
     private void getName(CommandSender sender,String displayName) {
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         for(Player player : onlinePlayers){
             if(player.getDisplayName().equalsIgnoreCase(displayName)){
-                sender.sendMessage(ChatColor.translateAlternateColorCodes('&',("&e    displayName : "+player.getDisplayName() + "\n    Name : " + player.getName())));
+                LaUtil.SendPlayerMessage(sender, "<YELLOW>displayName : "+player.displayName() + "\nName : " + player.getName()+"</YELLOW>");
+                //sender.sendMessage(ChatColor.translateAlternateColorCodes('&',("&e    displayName : "+player.getDisplayName() + "\n    Name : " + player.getName())));
                 return;
             }
         }
-        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("message.player.no-exists-online")));
+        SendMessageConfigString(sender, "message.player.no-exists-online");
+        //sender.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString("message.player.no-exists-online")));
 
     }
 
     private void getInfo(CommandSender sender) {
         List<String> InfoList = this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getStringList("info");
         if(InfoList==null){
-            sender.sendMessage("Info is null");
+            LaUtil.SendPlayerMessage(sender, "Info is null");
         }
         for(String info: InfoList){
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',info));
+            LaUtil.SendPlayerMessage(sender, info);
         }
 
     }
@@ -320,10 +322,11 @@ public class ViCommand implements CommandExecutor {
     private void getHelp(CommandSender sender) {
         List<String> helpList = this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getStringList("help");
         if(helpList==null){
-            sender.sendMessage("Help is null");
+
+            //sender.sendMessage("Help is null");
         }
         for(String help: helpList){
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&',help));
+            LaUtil.SendPlayerMessage(sender, help);
         }
 
     }
@@ -332,6 +335,14 @@ public class ViCommand implements CommandExecutor {
         if(!checkPermission(sender,"vi.admin")){
             return;
         }
+        LaUtil.SendPlayerMessage(sender, "<GREEN> auto-save : </GREEN>" + "<AQUA>" +  this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getInt("auto-save") + "</AQUA>");
+        LaUtil.SendPlayerMessage(sender, "<GREEN> save-messaging :  </GREEN>" + "<AQUA>" +  this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getBoolean("save-messaging") + "</AQUA>");
+        LaUtil.SendPlayerMessage(sender, "<GREEN> save-message : </GREEN>" + "<AQUA>" +  this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getString("save-message") + "</AQUA>");
+        LaUtil.SendPlayerMessage(sender, "<GREEN> save-messaging : </GREEN>" + "<AQUA>" +  this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getBoolean("load-messaging") + "</AQUA>");
+        LaUtil.SendPlayerMessage(sender, "<GREEN> save-message : </GREEN>" + "<AQUA>" +  this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getString("load-message") + "</AQUA>");
+        LaUtil.SendPlayerMessage(sender, "<GREEN> max-inventory : </GREEN>" + "<AQUA>" +  this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getInt("max-inventory") + "</AQUA>");
+        LaUtil.SendPlayerMessage(sender, "<GREEN> save-once-per-several-times : </GREEN>" + "<AQUA>" +  this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getInt("save-once-per-several-times") + "</AQUA>");
+        /*
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&',ChatColor.GREEN + "auto-save : " + ChatColor.AQUA + this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getInt("auto-save")));
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&',ChatColor.GREEN + "save-messaging : " + ChatColor.AQUA + this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getBoolean("save-messaging")));
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&',ChatColor.GREEN + "save-message : "+ ChatColor.AQUA + this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getString("save-message")));
@@ -339,7 +350,21 @@ public class ViCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&',ChatColor.GREEN + "save-message : "+ ChatColor.AQUA + this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getString("load-message")));
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&',ChatColor.GREEN + "max-inventory : " + ChatColor.AQUA + this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getInt("max-inventory")));
         sender.sendMessage(ChatColor.translateAlternateColorCodes('&',ChatColor.GREEN + "save-once-per-several-times : " + ChatColor.AQUA + this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().getConfig().getInt("save-once-per-several-times")));
+         */
 
+    }
+
+    private void SendMessageConfigString(CommandSender sender, String key) {
+        String message = this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString(key);
+        LaUtil.SendPlayerMessage(sender, message);
+    }
+
+    private void SendMessageConfigString(CommandSender sender, String key, String replaceWith) {
+        String message = this.LaVirtualInventory.virtualInventoryManager.getVirtualInventoryPlugin().messageConfig.getConfig().getString(key);
+        if (message.contains("#{inventoryName}")) {
+            message = message.replace("#{inventoryName}", replaceWith);
+        }
+        LaUtil.SendPlayerMessage(sender, message);
     }
 
 }

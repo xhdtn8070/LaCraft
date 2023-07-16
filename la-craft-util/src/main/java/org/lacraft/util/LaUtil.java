@@ -3,6 +3,8 @@ package org.lacraft.util;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
 
@@ -29,6 +31,16 @@ public final class LaUtil extends JavaPlugin {
     public static void sendConsoleMessage(String message) {
         Component component = MiniMessage.miniMessage().deserialize(message);
         Bukkit.getServer().sendMessage(component);
+    }
+
+    public static void SendPlayerMessage(CommandSender sender, String message) {
+        Component component = MiniMessage.miniMessage().deserialize(message);
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            player.sendMessage(component);
+        } else {
+            sender.sendMessage(component);
+        }
     }
 
     public static void flywayMigrate(String url, String user, String password, String table) {
