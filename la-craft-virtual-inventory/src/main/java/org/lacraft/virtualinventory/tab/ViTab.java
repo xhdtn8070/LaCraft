@@ -9,6 +9,7 @@ import org.lacraft.virtualinventory.LaVirtualInventory;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.lacraft.virtualinventory.config.TabConfiguration;
 
 public class ViTab implements TabCompleter {
     private LaVirtualInventory LaVirtualInventory;
@@ -24,7 +25,7 @@ public class ViTab implements TabCompleter {
         List<String> result=new ArrayList<>();
 
         if(args.length==1 ){
-            for(String string :this.LaVirtualInventory.tabConfiguration.getStringList("tab.init")){
+            for(String string : TabConfiguration.getInstance().getInitTabs()){
                 if(string.toLowerCase().startsWith(args[0])){
                     result.add(string);
                 }

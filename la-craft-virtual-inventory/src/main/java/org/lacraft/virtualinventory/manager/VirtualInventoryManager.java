@@ -1,5 +1,6 @@
 package org.lacraft.virtualinventory.manager;
 
+import lombok.Getter;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,7 +11,10 @@ import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
 
+import org.lacraft.util.api.MessageUtil;
 import org.lacraft.virtualinventory.LaVirtualInventory;
+import org.lacraft.virtualinventory.config.MessageConfig;
+import org.lacraft.virtualinventory.config.PluginConfig;
 import org.lacraft.virtualinventory.domain.VirtualInventory;
 
 import java.io.*;
@@ -21,23 +25,23 @@ import java.util.Map;
 
 
 public class VirtualInventoryManager {
-    private final LaVirtualInventory LaVirtualInventory;
+
+    @Getter
+    private static final VirtualInventoryManager instance = new VirtualInventoryManager();
+
     private final HashMap<String, VirtualInventory> inventories;
     private final HashMap<String, List<String>> list;
     private final File folder;
-    public VirtualInventoryManager(LaVirtualInventory LaVirtualInventory,File folder) {
-        this.LaVirtualInventory = LaVirtualInventory;
-        this.folder = folder;
+    public VirtualInventoryManager() {
+
+
+        this.folder = new File(LaVirtualInventory.getInstance().getDataFolder(), "inventory");
         this.inventories = new HashMap<>();
         this.list = new HashMap<>();
         if(!folder.exists()){
             folder.mkdir();
-            Bukkit.broadcastMessage("mkdir " + folder.getAbsolutePath());
+            MessageUtil.sendConsoleMessage("mkdir " + folder.getAbsolutePath());
         }
-    }
-
-    public LaVirtualInventory getVirtualInventoryPlugin() {
-        return LaVirtualInventory;
     }
 
     public List<String> getList(Player player){
@@ -62,8 +66,7 @@ public class VirtualInventoryManager {
         VirtualInventory inventory = getInventroy(player, inventoryName);
         if(inventory==null||inventory.isDelete()){
             if(getMaxInventory()<getAmountInventory(player)){
-
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.messageConfig.getConfig().getString("message.inventory.create-error")));
+                MessageUtil.sendPlayerMessage(player, MessageConfig.getInstance().getInventory().getCreateError());
                 return null;
             }
             String playerName = player.getName().toLowerCase();
@@ -74,13 +77,13 @@ public class VirtualInventoryManager {
             }
             stringList.add(inventoryName);
             this.list.put(playerName,stringList);
-            String title = this.LaVirtualInventory.messageConfig.getConfig().getString("message.inventory.title");
+            String title = MessageConfig.getInstance().getInventory().getTitle();
             title = title.replace("#{playerName}",playerName).replace("#{inventoryName}",inventoryName);
             inventory = new VirtualInventory(Bukkit.createInventory(player, 54,ChatColor.translateAlternateColorCodes('&',title)),true);
             inventories.put(json,inventory);
             return inventory;
         }
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.messageConfig.getConfig().getString("message.inventory.already-exists")));
+        MessageUtil.sendPlayerMessage(player, MessageConfig.getInstance().getInventory().getAlreadyExists());
         return inventory;
     }
     public int getAmountInventory(Player player){
@@ -91,12 +94,13 @@ public class VirtualInventoryManager {
         return list.size();
     }
     public int getMaxInventory(){
-        return this.LaVirtualInventory.getConfig().getInt("max-inventory");
+        return PluginConfig.getInstance().getMaxInventory();
     }
 
     public void load() throws IOException, ClassNotFoundException {
-        boolean loadMessaging = this.LaVirtualInventory.getConfig().getBoolean("load-messaging");
-        String loadMessage = this.LaVirtualInventory.getConfig().getString("load-message");
+
+        boolean loadMessaging = PluginConfig.getInstance().getLoadMessaging();
+        String loadMessage = PluginConfig.getInstance().getLoadMessage();
 
         for(File file :this.folder.listFiles()){
             if(file.getName().endsWith("txt")){
@@ -130,7 +134,7 @@ public class VirtualInventoryManager {
                 }
                 bufferedReader.close();
                 fileInputStream.close();
-                String title = this.LaVirtualInventory.messageConfig.getConfig().getString("message.inventory.title");
+                String title = MessageConfig.getInstance().getInventory().getTitle();
                 title = title.replace("#{playerName}",property[0]).replace("#{inventoryName}",property[1]);
                 Inventory inventory = Bukkit.createInventory(Bukkit.getPlayer(property[0]), 54, ChatColor.translateAlternateColorCodes('&',title));
                 inventory.setContents(itemStacks);
@@ -184,7 +188,7 @@ public class VirtualInventoryManager {
              * 창고의 정보가 일부 누락될 수 있기 때문에
              * 변경점이 발견되지 않아도 저장 n번당 한번씩 저장한다.
              */
-            if(virtualInventory.getCount()>=this.LaVirtualInventory.getConfig().getInt("save-once-per-several-times")){
+            if(virtualInventory.getCount()>=PluginConfig.getInstance().getSaveOncePerSeveralTimes()){
                 virtualInventory.setModify(true);
             }else{
                 virtualInventory.setCount(virtualInventory.getCount()+1);
@@ -212,10 +216,10 @@ public class VirtualInventoryManager {
 
             saveFile(file,virtualInventory,force);
         }
-        if(this.LaVirtualInventory.getConfig().getBoolean("save-messaging")){
-            Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.getConfig().getString("save-message")));
+        if(PluginConfig.getInstance().getSaveMessaging()){
+            MessageUtil.sendBroadcastMessage("<GREEN>" + PluginConfig.getInstance().getSaveMessage() + "</GREEN>");
         }else{
-            Bukkit.getConsoleSender().sendMessage((ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.getConfig().getString("save-message"))));
+            MessageUtil.sendConsoleMessage("<GREEN>" + PluginConfig.getInstance().getSaveMessage() + "</GREEN>");
         }
 
     }
@@ -224,7 +228,7 @@ public class VirtualInventoryManager {
 
         List<String> list = getList(player);
         if(list==null){
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.messageConfig.getConfig().getString("message.inventory.no-exists").replace("#{inventoryName}",inventoryName)));
+            MessageUtil.sendPlayerMessage(player, MessageConfig.getInstance().getInventory().getNoExists().replace("#{inventoryName}",inventoryName));
             return;
         }
         int index = -1;
@@ -236,11 +240,11 @@ public class VirtualInventoryManager {
             }
         }
         if(index==-1){
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.messageConfig.getConfig().getString("message.inventory.no-exists").replace("#{inventoryName}",inventoryName)));
+            MessageUtil.sendPlayerMessage(player, MessageConfig.getInstance().getInventory().getNoExists().replace("#{inventoryName}",inventoryName));
             return;
         }
         VirtualInventory virtualInventory = getInventroy(player, inventoryName);
         virtualInventory.setDelete(true);
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&',this.LaVirtualInventory.messageConfig.getConfig().getString("message.inventory.remove")));
+        MessageUtil.sendPlayerMessage(player, MessageConfig.getInstance().getInventory().getRemove());
     }
 }

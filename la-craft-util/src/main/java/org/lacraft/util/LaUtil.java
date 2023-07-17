@@ -1,55 +1,29 @@
 package org.lacraft.util;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import static org.lacraft.util.api.MessageUtil.sendConsoleMessage;
+
 import org.bukkit.plugin.java.JavaPlugin;
 import org.flywaydb.core.Flyway;
+import org.lacraft.util.api.MessageUtil;
 
 public final class LaUtil extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        sendConsoleMessage("&유틸 서버 onLoad");
+        MessageUtil.sendConsoleMessage("&유틸 서버 onLoad");
         super.onLoad();
     }
 
     @Override
     public void onDisable() {
-        sendConsoleMessage("&유틸 서버 onDisable");
+        MessageUtil.sendConsoleMessage("&유틸 서버 onDisable");
         super.onDisable();
     }
 
     @Override
     public void onEnable() {
-        sendConsoleMessage("&유틸 서버 onEnable");
+        MessageUtil.sendConsoleMessage("&유틸 서버 onEnable");
         super.onEnable();
     }
 
-    public static void sendConsoleMessage(String message) {
-        Component component = MiniMessage.miniMessage().deserialize(message);
-        Bukkit.getServer().sendMessage(component);
-    }
-
-    public static void SendPlayerMessage(CommandSender sender, String message) {
-        Component component = MiniMessage.miniMessage().deserialize(message);
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
-            player.sendMessage(component);
-        } else {
-            sender.sendMessage(component);
-        }
-    }
-
-    public static void flywayMigrate(String url, String user, String password, String table) {
-        Flyway flyway = Flyway.configure()
-                .dataSource(url, user, password)
-                .table(table)
-                .load();
-
-        // Start migration
-        flyway.migrate();
-    }
 }

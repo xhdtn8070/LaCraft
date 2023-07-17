@@ -2,18 +2,20 @@
 # 0 이면 auto-save X
 # 1 이상이면  해당 초에 한번씩 저장
 # 서버 상태에 맞게 설정
-auto-save: 10
+auto-save: true
+
+auto-save-time: 10
 
 # 가상 인벤토리를 저장할 때, 서버에 메시지를 남기는지 true or false
 # true면 메시지를 남긴다.
 save-messaging: true
 
 # save-messaging == true 일 때, 아래의 메시지를 전송한다.
-save-message: "&2[virtual Inventory] 가상 창고가 저장되었습니다."
+save-message: "<GREEN>[virtual Inventory] 가상 창고가 저장되었습니다.</GREEN>"
 
 load-messaging: true
 
-load-message: "&6\t파일 명 : #{fileName}"
+load-message: "<GOLD>\t파일 명 : #{fileName}</GOLD>"
 
 # 해당 플러그인은 세이브할 때 미처 변경이 완료 되기 전에
 # 저장이 완료되어 일부 데이터 누락이 생길 때를 대비한 기능이다.
