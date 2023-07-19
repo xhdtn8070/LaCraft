@@ -27,12 +27,22 @@ import java.util.Map;
 public class VirtualInventoryManager {
 
     @Getter
-    private static final VirtualInventoryManager instance = new VirtualInventoryManager();
+    private static final VirtualInventoryManager instance;
+
+    static {
+        try {
+            instance = new VirtualInventoryManager();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private final HashMap<String, VirtualInventory> inventories;
     private final HashMap<String, List<String>> list;
     private final File folder;
-    public VirtualInventoryManager() {
+    public VirtualInventoryManager() throws IOException, ClassNotFoundException {
 
 
         this.folder = new File(LaVirtualInventory.getInstance().getDataFolder(), "inventory");
@@ -42,6 +52,7 @@ public class VirtualInventoryManager {
             folder.mkdir();
             MessageUtil.sendConsoleMessage("mkdir " + folder.getAbsolutePath());
         }
+        this.load();
     }
 
     public List<String> getList(Player player){

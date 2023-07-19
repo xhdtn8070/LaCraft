@@ -1,5 +1,6 @@
 package org.lacraft.virtualinventory.tab;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -9,12 +10,18 @@ import org.lacraft.virtualinventory.LaVirtualInventory;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.lacraft.virtualinventory.command.ViCommand;
 import org.lacraft.virtualinventory.config.TabConfiguration;
+import org.lacraft.virtualinventory.manager.VirtualInventoryManager;
 
 public class ViTab implements TabCompleter {
-    private LaVirtualInventory LaVirtualInventory;
-    public ViTab(LaVirtualInventory LaVirtualInventory) {
-        this.LaVirtualInventory = LaVirtualInventory;
+
+    @Getter
+    private static final ViTab instance = new ViTab();
+    
+    private ViTab() {
+        LaVirtualInventory.getInstance().getCommand("vi").setTabCompleter(this);
     }
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
@@ -57,7 +64,8 @@ public class ViTab implements TabCompleter {
          */
         if(args.length==2 && (args[0].equalsIgnoreCase("l")
                 || args[0].equalsIgnoreCase("list"))){
-            if(!this.LaVirtualInventory.viCommand.checkPermission(sender,"vi.admin")){
+            
+            if(!ViCommand.getInstance().checkPermission(sender,"vi.admin")){
                 return result;
             }
             for(Player player :Bukkit.getOnlinePlayers()){
@@ -83,9 +91,9 @@ public class ViTab implements TabCompleter {
          */
         if(args.length==2 && (args[0].equalsIgnoreCase("o")
                 || args[0].equalsIgnoreCase("open"))){
-            if(this.LaVirtualInventory.viCommand.isPlayer(sender)) {
+            if(ViCommand.getInstance().isPlayer(sender)) {
                 Player player = (Player) sender;
-                for(String string :this.LaVirtualInventory.virtualInventoryManager.getList(player)){
+                for(String string :VirtualInventoryManager.getInstance().getList(player)){
                     if(string.startsWith(args[1])){
                         result.add(string);
                     }
@@ -103,7 +111,7 @@ public class ViTab implements TabCompleter {
          */
         if(args.length==2 && (args[0].equalsIgnoreCase("oo")
                 || args[0].equalsIgnoreCase("openother"))){
-            if(!this.LaVirtualInventory.viCommand.checkPermission(sender,"vi.admin")){
+            if(!ViCommand.getInstance().checkPermission(sender,"vi.admin")){
                 return result;
             }
 
@@ -116,17 +124,17 @@ public class ViTab implements TabCompleter {
         }
         if(args.length==3 && (args[0].equalsIgnoreCase("oo")
                 || args[0].equalsIgnoreCase("openother"))){
-            if(!this.LaVirtualInventory.viCommand.checkPermission(sender,"vi.admin")) {
+            if(!ViCommand.getInstance().checkPermission(sender,"vi.admin")) {
                 return result;
             }
 
-            if(this.LaVirtualInventory.viCommand.isPlayer(sender)) {
+            if(ViCommand.getInstance().isPlayer(sender)) {
 
                 Player targetPlayer = Bukkit.getPlayer(args[1]);
-                if(!this.LaVirtualInventory.viCommand.checkPlayer(sender,targetPlayer)){
+                if(!ViCommand.getInstance().checkPlayer(sender,targetPlayer)){
                     return result;
                 }
-                for(String string :this.LaVirtualInventory.virtualInventoryManager.getList(targetPlayer)){
+                for(String string :VirtualInventoryManager.getInstance().getList(targetPlayer)){
                     if(string.startsWith(args[2])){
                         result.add(string);
                     }
@@ -141,9 +149,9 @@ public class ViTab implements TabCompleter {
          */
         if(args.length==2 && (args[0].equalsIgnoreCase("rm")
                 || args[0].equalsIgnoreCase("remove"))){
-            if(this.LaVirtualInventory.viCommand.isPlayer(sender)) {
+            if(ViCommand.getInstance().isPlayer(sender)) {
                 Player player = (Player) sender;
-                for(String string :this.LaVirtualInventory.virtualInventoryManager.getList(player)){
+                for(String string :VirtualInventoryManager.getInstance().getList(player)){
                     if(string.startsWith(args[1])){
                         result.add(string);
                     }
@@ -161,7 +169,7 @@ public class ViTab implements TabCompleter {
          */
         if(args.length==2 && (args[0].equalsIgnoreCase("rmo")
                 || args[0].equalsIgnoreCase("removeother"))){
-            if(!this.LaVirtualInventory.viCommand.checkPermission(sender,"vi.admin")){
+            if(!ViCommand.getInstance().checkPermission(sender,"vi.admin")){
                 return result;
             }
 
@@ -175,17 +183,17 @@ public class ViTab implements TabCompleter {
 
         if(args.length==3 && (args[0].equalsIgnoreCase("rmo")
                 || args[0].equalsIgnoreCase("removeother"))){
-            if(!this.LaVirtualInventory.viCommand.checkPermission(sender,"vi.admin")) {
+            if(!ViCommand.getInstance().checkPermission(sender,"vi.admin")) {
                 return result;
             }
 
-            if(this.LaVirtualInventory.viCommand.isPlayer(sender)) {
+            if(ViCommand.getInstance().isPlayer(sender)) {
 
                 Player targetPlayer = Bukkit.getPlayer(args[2]);
-                if(!this.LaVirtualInventory.viCommand.checkPlayer(sender,targetPlayer)){
+                if(!ViCommand.getInstance().checkPlayer(sender,targetPlayer)){
                     return result;
                 }
-                for(String string :this.LaVirtualInventory.virtualInventoryManager.getList(targetPlayer)){
+                for(String string :VirtualInventoryManager.getInstance().getList(targetPlayer)){
                     if(string.startsWith(args[2])){
                         result.add(string);
                     }

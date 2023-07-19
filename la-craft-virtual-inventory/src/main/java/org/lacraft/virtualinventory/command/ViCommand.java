@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.lacraft.util.api.MessageUtil;
+import org.lacraft.virtualinventory.LaVirtualInventory;
 import org.lacraft.virtualinventory.config.MessageConfig;
 import org.lacraft.virtualinventory.config.PluginConfig;
 import org.lacraft.virtualinventory.domain.VirtualInventory;
@@ -23,6 +24,7 @@ public class ViCommand implements CommandExecutor {
     private static final ViCommand instance = new ViCommand();
 
     private ViCommand() {
+        LaVirtualInventory.getInstance().getCommand("vi").setExecutor(this);
     }
 
     @Override

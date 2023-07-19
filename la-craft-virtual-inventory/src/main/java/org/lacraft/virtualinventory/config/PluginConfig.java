@@ -2,6 +2,7 @@ package org.lacraft.virtualinventory.config;
 
 import lombok.Getter;
 import org.lacraft.util.api.MessageUtil;
+import org.lacraft.util.domain.FileYmlDataManager;
 import org.lacraft.util.domain.ResourceYmlDataManager;
 import org.lacraft.virtualinventory.LaVirtualInventory;
 
@@ -13,7 +14,7 @@ public class PluginConfig {
 
     private final String fileName = "config.yml";
 
-    private final ResourceYmlDataManager ymlDataManager;
+    private final FileYmlDataManager ymlDataManager;
 
     private Boolean autoSave;
 
@@ -33,7 +34,7 @@ public class PluginConfig {
 
     private PluginConfig() {
         MessageUtil.sendConsoleMessage("PluginConfig 로딩중");
-        ymlDataManager = new ResourceYmlDataManager(LaVirtualInventory.getInstance(), fileName);
+        ymlDataManager = new FileYmlDataManager(LaVirtualInventory.getInstance(), fileName);
         init();
     }
 

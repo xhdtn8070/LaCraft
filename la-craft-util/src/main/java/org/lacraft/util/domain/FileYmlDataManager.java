@@ -36,11 +36,7 @@ public class FileYmlDataManager extends AbstractYmlDataManager {
         if (!configFile.exists()) {
             this.plugin.saveResource(fileName, false);
         }
-        this.dataConfig = YamlConfiguration.loadConfiguration(
-                FileUtil.getReaderFromStream(
-                        this.plugin.getResource(fileName)
-                )
-        );
+        this.dataConfig = YamlConfiguration.loadConfiguration(configFile);
     }
 
     // 설정을 저장합니다. 설정과 설정 파일이 모두 null이 아닐 때에만 저장을 진행합니다.
