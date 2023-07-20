@@ -2,6 +2,16 @@ dependencies {
     implementation 'org.flywaydb:flyway-core:7.15.0' // Flyway 추가
     implementation "net.kyori:adventure-api:4.14.0"
     implementation "net.kyori:adventure-text-minimessage:4.14.0"
+
+    implementation 'commons-codec:commons-codec:1.15'
+    implementation 'commons-io:commons-io:2.7'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.15.2'
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml
+    implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.15.2'
+
+
 }
 
 shadowJar {
