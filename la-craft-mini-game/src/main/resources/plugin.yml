@@ -3,3 +3,8 @@ version: 1
 main: org.lacraft.minigame.LaMiniGame
 api-version: '1.20'
 depend: ['la-craft-util']
+
+commands:
+  minigame:                                            # 명령어 이름
+    description: Command for minigame   # 명령어 설명
+    usage: type '/minigame help'
