@@ -1,9 +1,7 @@
 package org.lacraft.minigame.catchdiamond.manager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -16,13 +14,23 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.lacraft.minigame.LaMiniGame;
 import org.lacraft.minigame.catchdiamond.domain.CatchDiamond;
+import org.lacraft.util.api.ItemAdderUtil;
 import org.lacraft.util.api.MessageUtil;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 public class CatchDiamondManager implements Listener, Runnable {
 
     @Getter
     private static final CatchDiamondManager instance = new CatchDiamondManager();
+
+    @Getter
+    @Setter
+    private static boolean isNeedsIaZip;
+
     private final int GUI_SIZE = 54;
     private final int TIMER_SLOT = 45;
 
@@ -53,6 +61,10 @@ public class CatchDiamondManager implements Listener, Runnable {
     //금 2초 지났을때 석탄으로 내려갈 확률 50% / 사라질 확률 50%
     //석탄 2초 지났을 땐 100% 삭제
     private CatchDiamondManager() {
+        MessageUtil.sendConsoleMessage("<GREEN>CatchDiamondManager init...</GREEN>");
+        isNeedsIaZip = ItemAdderUtil.extractDefaultAssets(LaMiniGame.getInstance());
+        MessageUtil.sendConsoleMessage("<GREEN>CacheDiamondMange.isNeedsIaZip : " + isNeedsIaZip + "</GREEN>");
+
         this.blockScore.put(TARGET_ITEM_DIA, 10);
         this.blockScore.put(TARGET_ITEM_GOLD, 7);
         this.blockScore.put(TARGET_ITEM_COAL, 5);
