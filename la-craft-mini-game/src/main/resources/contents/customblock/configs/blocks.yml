@@ -1,0 +1,124 @@
+info:
+  namespace: customblock
+items:
+  wood_block:
+    display_name: 나무 판자
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/wood_block.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+
+  red_bricks:
+    display_name: 붉은 벽돌
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/red_bricks.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+
+  red_bricks2:
+    display_name: 정교한 붉은 벽돌
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/red_bricks2.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+
+  red_polished:
+    display_name: 깎인 붉은 벽돌
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/red_polished.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+
+  red_polished:
+    display_name: 윤나는 붉은 벽돌
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/red_polished.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+
+  red_pillar:
+    display_name: 붉은 벽돌 기둥
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/red_pillar.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+
+  ice_block:
+    display_name: 얼음 블록
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/ice_block_top.png
+        - block/ice_block_side.png
+        - block/ice_block_side.png
+        - block/ice_block_side.png
+        - block/ice_block_top.png
+        - block/ice_block_side.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+
+  broken_stone:
+    display_name: 부서진 돌
+    resource:
+      generate: false
+      material: PAPER
+      model_path: block/broken_stone
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+          
+  ruby_ore:
+    display_name: 루비 광석
+    resource:
+      generate: true
+      material: PAPER
+      textures:
+        - block/ruby_ore.png
+    specific_properties:
+      block:
+        placed_model:
+          type: REAL_NOTE
+          break_particles: ITEM
+        cancel_drop: true

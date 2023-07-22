@@ -1,0 +1,10 @@
+info:
+  namespace: customblock
+items:
+  ruby:
+    display_name: 루비 원석
+    resource:
+      generate: true
+      material: EMERALD
+      textures:
+        - item/ruby.png

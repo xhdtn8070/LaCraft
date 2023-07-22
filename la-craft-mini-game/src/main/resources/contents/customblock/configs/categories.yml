@@ -1,0 +1,17 @@
+info:
+  namespace: customblock
+categories:
+  blocks:
+    enabled: true
+    icon: "customblock:red_bricks"
+    name: "블록"
+    items:
+      - "customblock:wood_block"
+      - "customblock:red_bricks"
+      - "customblock:red_bricks2"
+      - "customblock:red_pillar"
+      - "customblock:red_polished"
+      - "customblock:ice_block"
+      - "customblock:broken_stone"
+      - "customblock:ruby_ore"
+      - "customblock:ruby"

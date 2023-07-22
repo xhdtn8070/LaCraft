@@ -1,0 +1,17 @@
+info:
+  namespace: customblock
+loots:
+  blocks:
+    ruby_ore:
+      type: customblock:ruby_ore
+      items:
+        ruby:
+          item: customblock:ruby
+          min_amount: 1
+          max_amount: 2
+          chance: 100
+      exp:
+        exp_1:
+          min_amount: 5
+          max_amount: 10
+          chance: 100
