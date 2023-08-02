@@ -1,5 +1,9 @@
 package org.lacraft.minigame.catchdiamond.manager;
 
+import dev.lone.itemsadder.api.CustomStack;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.Bukkit;
@@ -16,10 +20,6 @@ import org.lacraft.minigame.LaMiniGame;
 import org.lacraft.minigame.catchdiamond.domain.CatchDiamond;
 import org.lacraft.util.api.ItemAdderUtil;
 import org.lacraft.util.api.MessageUtil;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 @Getter
 public class CatchDiamondManager implements Listener, Runnable {
@@ -40,7 +40,9 @@ public class CatchDiamondManager implements Listener, Runnable {
 
     private final int MAX_SCORE = 100; // 게임 최대 점수
     private final ItemStack TARGET_ITEM_DIA = new ItemStack(Material.DIAMOND, 1); // 클릭해야 하는 블럭 아이템
-    private final ItemStack TARGET_ITEM_GOLD = new ItemStack(Material.GOLD_INGOT, 1); // 클릭해야 하는 블럭 아이템
+
+    private final ItemStack TARGET_ITEM_GOLD;
+    //    private final ItemStack TARGET_ITEM_GOLD = new ItemStack(Material.GOLD_INGOT, 1); // 클릭해야 하는 블럭 아이템
     private final ItemStack TARGET_ITEM_COAL = new ItemStack(Material.COAL, 1); // 클릭해야 하는 블럭 아이템
     private final ItemStack BOMB_ITEM = new ItemStack(Material.TNT, 1); // GUI 테두리 아이템
 
@@ -65,6 +67,12 @@ public class CatchDiamondManager implements Listener, Runnable {
         isNeedsIaZip = ItemAdderUtil.extractDefaultAssets(LaMiniGame.getInstance());
         MessageUtil.sendConsoleMessage("<GREEN>CacheDiamondMange.isNeedsIaZip : " + isNeedsIaZip + "</GREEN>");
 
+        CustomStack rubyCustomItem = CustomStack.getInstance("customblock:ruby");
+        if (rubyCustomItem != null) {
+            TARGET_ITEM_GOLD = rubyCustomItem.getItemStack();
+        } else {
+            TARGET_ITEM_GOLD = new ItemStack(Material.GOLD_INGOT);
+        }
         this.blockScore.put(TARGET_ITEM_DIA, 10);
         this.blockScore.put(TARGET_ITEM_GOLD, 7);
         this.blockScore.put(TARGET_ITEM_COAL, 5);

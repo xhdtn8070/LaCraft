@@ -1,5 +1,6 @@
 dependencies {
     compileOnly project(':la-craft-util')
+    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.5.0b'
 }
 
 shadowJar {
