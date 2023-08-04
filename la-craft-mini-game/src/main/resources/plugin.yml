@@ -2,7 +2,7 @@ name: la-craft-mini-game
 version: 1
 main: org.lacraft.minigame.LaMiniGame
 api-version: '1.20'
-depend: ['la-craft-util']
+depend: ['la-craft-util', 'ItemsAdder']
 
 commands:
   minigame:                                            # 명령어 이름
