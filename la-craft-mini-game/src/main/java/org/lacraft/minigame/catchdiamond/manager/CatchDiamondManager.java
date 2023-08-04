@@ -1,8 +1,11 @@
 package org.lacraft.minigame.catchdiamond.manager;
 
+
 import dev.lone.itemsadder.api.CustomStack;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,8 +21,11 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.lacraft.minigame.LaMiniGame;
 import org.lacraft.minigame.catchdiamond.domain.CatchDiamond;
+import org.lacraft.minigame.catchdiamond.domain.CatchDiamondBlock;
+import org.lacraft.minigame.catchdiamond.event.CatchDiamondEndEvent;
 import org.lacraft.util.api.ItemAdderUtil;
 import org.lacraft.util.api.MessageUtil;
+
 
 @Getter
 public class CatchDiamondManager implements Listener, Runnable {
@@ -27,57 +33,83 @@ public class CatchDiamondManager implements Listener, Runnable {
     @Getter
     private static final CatchDiamondManager instance = new CatchDiamondManager();
 
-    @Getter
     @Setter
-    private static boolean isNeedsIaZip;
+    private boolean isNeedsIaZip;
 
-    private final int GUI_SIZE = 54;
-    private final int TIMER_SLOT = 45;
+    private final String guiTitle; // GUI 타이틀
+    private final String startMessage; // 게임 시작 메시지
+    private final String endSuccessMessage; // 게임 성공 메시지
+    private final String endFailMessage; // 게임 실패 메시지
 
-    private final int GAME_DURATION = 30; // 게임 시간 (초)
-    private final int MAX_BLOCK_COUNT = 6; // 블럭 생성 개수
-    private final int START_BLOCK_COUNT = 3; // 초기 타겟 블럭 개수
+    public final List<CatchDiamondBlock> catchDiamondBlocks;
 
-    private final int MAX_SCORE = 100; // 게임 최대 점수
-    private final ItemStack TARGET_ITEM_DIA = new ItemStack(Material.DIAMOND, 1); // 클릭해야 하는 블럭 아이템
+    public final List<CatchDiamondBlock> bombBlocks;
 
-    private final ItemStack TARGET_ITEM_GOLD;
-    //    private final ItemStack TARGET_ITEM_GOLD = new ItemStack(Material.GOLD_INGOT, 1); // 클릭해야 하는 블럭 아이템
-    private final ItemStack TARGET_ITEM_COAL = new ItemStack(Material.COAL, 1); // 클릭해야 하는 블럭 아이템
-    private final ItemStack BOMB_ITEM = new ItemStack(Material.TNT, 1); // GUI 테두리 아이템
+    public final Map<ItemStack, CatchDiamondBlock> blockItemStacks;
 
-    private final String GUI_TITLE = "<GREEN>Mini Game</GREEN>"; // GUI 타이틀
-    private final String START_MESSAGE = "<YELLOW>Mini Game started!</YELLOW>"; // 게임 시작 메시지
-    private final String END_SUCCESS_MESSAGE = "<GREEN>Congratulations! You win!</GREEN>"; // 게임 성공 메시지
-    private final String END_FAIL_MESSAGE = "<RED>Game over! You lose!</RED>"; // 게임 실패 메시지
+    private final HashMap<Player, CatchDiamond> games;
 
-    private final HashMap<Player, CatchDiamond> games = new HashMap<>();
+    public final int guiSize;
+    public final int timerSlot;
 
-    private final HashMap<ItemStack, Integer> blockScore = new HashMap<>();
+    public final int gameDuration; // 게임 시간 (초)
+    public final int maxBlockCount; // 블럭 생성 개수
+    public final int maxBombCount; // 블럭 생성 개수
+    public final int startBlockCount; // 초기 타겟 블럭 개수
 
     private Integer taskId;
 
-    //블록 생존 시간은 2초로 정함
-    //다이아몬드는 2초 표기
-    //다이아몬드 2초 지났을때 금으로 내려갈 확률 70% / 사라질 확률 30%
-    //금 2초 지났을때 석탄으로 내려갈 확률 50% / 사라질 확률 50%
-    //석탄 2초 지났을 땐 100% 삭제
-    private CatchDiamondManager() {
+    public CatchDiamondManager() {
+
         MessageUtil.sendConsoleMessage("<GREEN>CatchDiamondManager init...</GREEN>");
         isNeedsIaZip = ItemAdderUtil.extractDefaultAssets(LaMiniGame.getInstance());
         MessageUtil.sendConsoleMessage("<GREEN>CacheDiamondMange.isNeedsIaZip : " + isNeedsIaZip + "</GREEN>");
 
-        CustomStack rubyCustomItem = CustomStack.getInstance("customblock:ruby");
-        if (rubyCustomItem != null) {
-            TARGET_ITEM_GOLD = rubyCustomItem.getItemStack();
-        } else {
-            TARGET_ITEM_GOLD = new ItemStack(Material.GOLD_INGOT);
+        guiTitle = "Mini Game"; // GUI 타이틀
+        startMessage = "<YELLOW>Mini Game started!</YELLOW>"; // 게임 시작 메시지
+        endSuccessMessage = "<GREEN>Congratulations! You win!</GREEN>"; // 게임 성공 메시지
+        endFailMessage = "<RED>Game over! You lose!</RED>"; // 게임 실패 메시지
+
+        games = new HashMap<>();
+
+        guiSize = 54;
+        timerSlot = 45;
+        gameDuration = 30; // 게임 시간 (초)
+        maxBlockCount = 8; // 블럭 생성 개수
+        maxBombCount = 5; // 블럭 생성 개수
+        startBlockCount = 3; //  초기 타겟 블럭 개수
+
+        catchDiamondBlocks =
+                Arrays.asList(
+                        new CatchDiamondBlock(getCustomItemStack("customblock:ruby", new ItemStack(Material.DIAMOND)), 10, 2),
+                        new CatchDiamondBlock(new ItemStack(Material.GOLD_INGOT, 1), 7, 4),
+                        new CatchDiamondBlock(new ItemStack(Material.COAL, 1), 5, 5)
+                );
+        bombBlocks =
+                Arrays.asList(
+                        new CatchDiamondBlock(new ItemStack(Material.TNT, 1), -20, 4)
+                );
+
+        blockItemStacks = new HashMap<>();
+
+        for (CatchDiamondBlock catchDiamondBlock : CatchDiamondManager.getInstance().catchDiamondBlocks) {
+            blockItemStacks.put(catchDiamondBlock.getBlock(), catchDiamondBlock);
         }
-        this.blockScore.put(TARGET_ITEM_DIA, 10);
-        this.blockScore.put(TARGET_ITEM_GOLD, 7);
-        this.blockScore.put(TARGET_ITEM_COAL, 5);
-        this.blockScore.put(BOMB_ITEM, -20);
+        for (CatchDiamondBlock catchDiamondBlock : CatchDiamondManager.getInstance().bombBlocks) {
+            blockItemStacks.put(catchDiamondBlock.getBlock(), catchDiamondBlock);
+        }
+
         this.taskId = null;
+        Bukkit.getPluginManager().registerEvents(this, LaMiniGame.getInstance());
+    }
+
+    private ItemStack getCustomItemStack(String namespacedID, ItemStack defaultItemStack) {
+        CustomStack customStack = CustomStack.getInstance(namespacedID);
+        if (customStack != null) {
+            return customStack.getItemStack();
+        } else {
+            return new ItemStack(defaultItemStack);
+        }
     }
 
     @Override
@@ -105,8 +137,10 @@ public class CatchDiamondManager implements Listener, Runnable {
         Player player = (Player) event.getPlayer();
 
         if (games.containsKey(player)) {
-            player.openInventory(event.getInventory());
-            MessageUtil.sendPlayerMessage(event.getPlayer(), "게임 중에는 창을 종료하실 수 없습니다.");
+            Bukkit.getScheduler().runTaskLater(LaMiniGame.getInstance(), () -> {
+                player.openInventory(event.getInventory());
+                MessageUtil.sendPlayerMessage(player, "게임 중에는 창을 종료하실 수 없습니다.");
+            }, 1L);
         }
 
     }
@@ -123,18 +157,11 @@ public class CatchDiamondManager implements Listener, Runnable {
                 event.setCancelled(true);
                 ItemStack clickedItem = event.getCurrentItem();
 
-                if (clickedItem != null && blockScore.containsKey(clickedItem)) {
+                if (clickedItem != null && blockItemStacks.containsKey(clickedItem)) {
 
-                    Integer targetScore = blockScore.get(clickedItem);
+                    Integer targetScore = blockItemStacks.get(clickedItem).getScore();
                     catchDiamond.addScore(targetScore);
-
                     clickedInv.setItem(event.getSlot(), new ItemStack(Material.AIR));
-
-//                    //맥스 스코어 달성 시 게임 종료 여부
-//                    if (catchDiamond.getScore() >= MAX_SCORE) {
-//                        // 게임 종료
-//                        this.endGame(player);
-//                    }
 
                 }
             }
@@ -154,7 +181,7 @@ public class CatchDiamondManager implements Listener, Runnable {
             if (games.containsKey(player)) {
                 continue;
             }
-            CatchDiamond catchDiamond = new CatchDiamond(GUI_TITLE, player);
+            CatchDiamond catchDiamond = new CatchDiamond(guiTitle, player);
             games.put(player, catchDiamond);
 
             player.openInventory(catchDiamond.getGui());
@@ -166,17 +193,25 @@ public class CatchDiamondManager implements Listener, Runnable {
 
     public void endGame(Player player) {
         if (games.containsKey(player)) {
-            player.closeInventory();
             CatchDiamond catchDiamond = games.get(player);
+            games.remove(player);
+            player.closeInventory();
 
-            //TODO 이벤트 발생
-            //TODO 성공실패 분기
-            //player.sendMessage(END_SUCCESS_MESSAGE); // in eventHandler
+            CatchDiamondEndEvent catchDiamondEndEvent = new CatchDiamondEndEvent(catchDiamond);
+            Bukkit.getPluginManager().callEvent(catchDiamondEndEvent);
 
             catchDiamond.free();
-            games.remove(player);
         }
+    }
 
+    @EventHandler
+    public void onCatchDiamondEndEvent(CatchDiamondEndEvent event) {
+
+        CatchDiamond catchDiamond = event.getCatchDiamond();
+        //TODO LOG 생성
+        MessageUtil.sendPlayerMessage(catchDiamond.getPlayer(), "- 게임 결과 -");
+        MessageUtil.sendPlayerMessage(catchDiamond.getPlayer(), " 부순 블록 : " + catchDiamond.getBrokenBlockCount());
+        MessageUtil.sendPlayerMessage(catchDiamond.getPlayer(), " 점수 : " + catchDiamond.getScore());
 
     }
 
