@@ -92,10 +92,10 @@ public class CatchDiamondManager implements Listener, Runnable {
 
         blockItemStacks = new HashMap<>();
 
-        for (CatchDiamondBlock catchDiamondBlock : CatchDiamondManager.getInstance().catchDiamondBlocks) {
+        for (CatchDiamondBlock catchDiamondBlock : catchDiamondBlocks) {
             blockItemStacks.put(catchDiamondBlock.getBlock(), catchDiamondBlock);
         }
-        for (CatchDiamondBlock catchDiamondBlock : CatchDiamondManager.getInstance().bombBlocks) {
+        for (CatchDiamondBlock catchDiamondBlock : bombBlocks) {
             blockItemStacks.put(catchDiamondBlock.getBlock(), catchDiamondBlock);
         }
 
