@@ -11,7 +11,7 @@ dependencies {
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml
     implementation group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.15.2'
 
-
+    compileOnly 'com.github.LoneDev6:API-ItemsAdder:3.5.0b'
 }
 
 shadowJar {

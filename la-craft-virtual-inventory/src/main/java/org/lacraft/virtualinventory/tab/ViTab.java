@@ -49,8 +49,8 @@ public class ViTab implements TabCompleter {
         if(args.length==2 && (args[0].equalsIgnoreCase("n")
                 || args[0].equalsIgnoreCase("name"))){
             for(Player player :Bukkit.getOnlinePlayers()){
-                if(player.getDisplayName().startsWith(args[1])){
-                    result.add(player.getDisplayName());
+                if(player.getName().startsWith(args[1])){
+                    result.add(player.getName());
                 }
             }
             return result;

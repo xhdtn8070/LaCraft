@@ -1,27 +1,33 @@
 package org.lacraft.virtualinventory.manager;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import lombok.Getter;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.apache.commons.codec.binary.Base64;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
-
-
+import org.lacraft.util.api.ColorUtil.Color;
 import org.lacraft.util.api.MessageUtil;
 import org.lacraft.virtualinventory.LaVirtualInventory;
 import org.lacraft.virtualinventory.config.MessageConfig;
 import org.lacraft.virtualinventory.config.PluginConfig;
 import org.lacraft.virtualinventory.domain.VirtualInventory;
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class VirtualInventoryManager {
@@ -90,7 +96,8 @@ public class VirtualInventoryManager {
             this.list.put(playerName,stringList);
             String title = MessageConfig.getInstance().getInventory().getTitle();
             title = title.replace("#{playerName}",playerName).replace("#{inventoryName}",inventoryName);
-            inventory = new VirtualInventory(Bukkit.createInventory(player, 54,ChatColor.translateAlternateColorCodes('&',title)),true);
+
+            inventory = new VirtualInventory(Bukkit.createInventory(player, 54,MiniMessage.miniMessage().deserialize(title)),true);
             inventories.put(json,inventory);
             return inventory;
         }
@@ -113,14 +120,14 @@ public class VirtualInventoryManager {
         boolean loadMessaging = PluginConfig.getInstance().getLoadMessaging();
         String loadMessage = PluginConfig.getInstance().getLoadMessage();
 
-        for(File file :this.folder.listFiles()){
+        for(File file : Objects.requireNonNull(this.folder.listFiles())){
             if(file.getName().endsWith("txt")){
                 /*
                 file.getName() ex) KOO_MA.1.json
                  */
                 if(loadMessaging){
                     String message = loadMessage.replace("#{fileName}",file.getName());
-                    Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',message));
+                    MessageUtil.sendConsoleMessage(message);
                 }
 
                 String[] property = file.getName().split("\\.");
@@ -147,7 +154,8 @@ public class VirtualInventoryManager {
                 fileInputStream.close();
                 String title = MessageConfig.getInstance().getInventory().getTitle();
                 title = title.replace("#{playerName}",property[0]).replace("#{inventoryName}",property[1]);
-                Inventory inventory = Bukkit.createInventory(Bukkit.getPlayer(property[0]), 54, ChatColor.translateAlternateColorCodes('&',title));
+
+                Inventory inventory = Bukkit.createInventory(Bukkit.getPlayer(property[0]), 54, MiniMessage.miniMessage().deserialize(title));
                 inventory.setContents(itemStacks);
                 this.inventories.put(property[0]+"."+property[1],new VirtualInventory(inventory,true));
             }
@@ -169,21 +177,24 @@ public class VirtualInventoryManager {
         if(data.equalsIgnoreCase("")){
             return null;
         }
-        try{
-            ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decodeBase64(data));
-            BukkitObjectInputStream ois = new BukkitObjectInputStream(bais);
-
-            Map<String, Object> serialize = (Map<String, Object>) ois.readObject();
-            ois.close();
-            bais.close();
-            return ItemStack.deserialize(serialize);
-        }catch (Exception e){
+        try (
+                ByteArrayInputStream bais = new ByteArrayInputStream(Base64.decodeBase64(data));
+                BukkitObjectInputStream ois = new BukkitObjectInputStream(bais)
+        ) {
+            Object obj = ois.readObject();
+            if (obj instanceof Map) {
+                @SuppressWarnings("unchecked")
+                Map<String, Object> serialize = (Map<String, Object>) obj;
+                return ItemStack.deserialize(serialize);
+            } else {
+                throw new ClassNotFoundException("Deserialized object is not of type Map<String, Object>");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
-
     }
+
 
     public void saveFile(File file, VirtualInventory virtualInventory, boolean force) throws IOException {
         if(file.exists()&&virtualInventory.isDelete()){
@@ -227,10 +238,10 @@ public class VirtualInventoryManager {
 
             saveFile(file,virtualInventory,force);
         }
-        if(PluginConfig.getInstance().getSaveMessaging()){
-            MessageUtil.sendBroadcastMessage("<GREEN>" + PluginConfig.getInstance().getSaveMessage() + "</GREEN>");
+        if(Boolean.TRUE.equals(PluginConfig.getInstance().getSaveMessaging())){
+            MessageUtil.sendBroadcastMessage(PluginConfig.getInstance().getSaveMessage(), Color.GREEN);
         }else{
-            MessageUtil.sendConsoleMessage("<GREEN>" + PluginConfig.getInstance().getSaveMessage() + "</GREEN>");
+            MessageUtil.sendConsoleMessage(PluginConfig.getInstance().getSaveMessage(),Color.GREEN);
         }
 
     }

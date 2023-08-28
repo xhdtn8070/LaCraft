@@ -2,3 +2,5 @@ name: la-craft-util
 version: 1
 main: org.lacraft.util.LaUtil
 api-version: '1.20'
+
+softdepend: ['ItemsAdder']

@@ -1,20 +1,22 @@
 package org.lacraft.util.api;
 
-import org.apache.commons.io.FileUtils;
-import org.bukkit.plugin.java.JavaPlugin;
-
+import dev.lone.itemsadder.api.CustomStack;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.apache.commons.io.FileUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
- * 플러그인의 resources/contents 디렉토리 내의 모든 파일을 plugins/ItemsAdder 디렉토리로 복사합니다.
- * 만약 복사 대상 파일이 이미 존재한다면, 해당 파일은 건너뜁니다.
+ * 플러그인의 resources/contents 디렉토리 내의 모든 파일을 plugins/ItemsAdder 디렉토리로 복사합니다. 만약 복사 대상 파일이 이미 존재한다면, 해당 파일은 건너뜁니다.
  */
-public class ItemAdderUtil {
+public class ItemsAdderUtil {
+
     static final String WARNING = "<RED>Please don't forget to regen your resourcepack using /iazip command.</RED>";
 
     // 이 메서드는 플러그인의 resources 폴더에서 모든 파일을 가져와서 ItemsAdder 폴더로 복사합니다.
@@ -61,8 +63,12 @@ public class ItemAdderUtil {
             try (ZipInputStream zip = new ZipInputStream(jar.openStream())) {
                 while (true) {
                     ZipEntry e = zip.getNextEntry();
-                    if (e == null) break;
-                    if (e.isDirectory()) continue;
+                    if (e == null) {
+                        break;
+                    }
+                    if (e.isDirectory()) {
+                        continue;
+                    }
                     String name = e.getName();
                     if (name.startsWith(folder)) {
                         boolean result = doExtractFile(plugin, itemsadderRoot, name);
@@ -77,6 +83,19 @@ public class ItemAdderUtil {
         }
 
         return needsIaZip;
+    }
+
+    public static ItemStack getCustomItemStack(String namespacedID, ItemStack defaultItemStack) {
+        if (Bukkit.getPluginManager().isPluginEnabled("ItemsAdder")) {
+            CustomStack customStack = CustomStack.getInstance(namespacedID);
+            if (customStack != null) {
+                return customStack.getItemStack();
+            } else {
+                return new ItemStack(defaultItemStack);
+            }
+        } else {
+            return new ItemStack(defaultItemStack);
+        }
     }
 }
 

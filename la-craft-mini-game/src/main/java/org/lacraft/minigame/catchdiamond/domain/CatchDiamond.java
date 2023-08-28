@@ -22,6 +22,8 @@ import org.bukkit.scoreboard.Score;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.lacraft.minigame.catchdiamond.manager.CatchDiamondManager;
+import org.lacraft.util.api.ColorUtil;
+import org.lacraft.util.api.ColorUtil.Color;
 
 @Getter
 @Setter
@@ -120,7 +122,6 @@ public class CatchDiamond {
     }
 
     public void addBomb() {
-        Random random = new Random();
         int blockCount = random.nextInt(CatchDiamondManager.getInstance().maxBombCount - bombLocation.size() + 1);
         for (int i = 0; i < blockCount; i++) {
             int slot = getEmptyRandomSlot();
@@ -173,7 +174,7 @@ public class CatchDiamond {
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard scoreboard = manager.getNewScoreboard();
 
-        Objective objective = scoreboard.registerNewObjective("CatchDiamond", Criteria.DUMMY, MiniMessage.miniMessage().deserialize("<YELLOW>Catch Diamond</YELLOW>"));
+        Objective objective = scoreboard.registerNewObjective("CatchDiamond", Criteria.DUMMY, MiniMessage.miniMessage().deserialize(ColorUtil.colorText("Catch Diamond", Color.YELLOW)));
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         Score objectiveScore = objective.getScore("점수");

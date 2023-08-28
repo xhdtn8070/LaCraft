@@ -2,6 +2,7 @@ package org.lacraft.minigame.catchdiamond.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.lacraft.minigame.LaMiniGame;
 import org.lacraft.minigame.catchdiamond.manager.CatchDiamondManager;
+import org.lacraft.util.api.ColorUtil.Color;
 import org.lacraft.util.api.MessageUtil;
 
 
@@ -18,7 +20,7 @@ public class CatchDiamondCommand implements CommandExecutor {
     private static final CatchDiamondCommand instance = new CatchDiamondCommand();
 
     private CatchDiamondCommand() {
-        LaMiniGame.getInstance().getCommand("minigame").setExecutor(this);
+        Objects.requireNonNull(LaMiniGame.getInstance().getCommand("minigame")).setExecutor(this);
     }
 
     @Override
@@ -27,7 +29,7 @@ public class CatchDiamondCommand implements CommandExecutor {
         // "catchDiamond" 미니게임 시작 명령 처리
         if (args.length == 2 && args[0].equalsIgnoreCase("catchDiamond") && args[1].equalsIgnoreCase("start")) {
             if(!isPlayer(sender)) { // sender가 플레이어인지 확인합니다.
-                MessageUtil.sendPlayerMessage(sender,"<RED>This command can only be run by a player.</RED>"); // 플레이어가 아닌 경우 오류 메시지를 출력합니다.
+                MessageUtil.sendPlayerMessage(sender,"This command can only be run by a player.", Color.RED); // 플레이어가 아닌 경우 오류 메시지를 출력합니다.
                 return true;
             } else {
                 List<Player> players = new ArrayList<>();

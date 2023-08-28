@@ -3,12 +3,15 @@ package org.lacraft.virtualinventory.command;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.lacraft.util.api.ColorUtil;
+import org.lacraft.util.api.ColorUtil.Color;
 import org.lacraft.util.api.MessageUtil;
 import org.lacraft.virtualinventory.LaVirtualInventory;
 import org.lacraft.virtualinventory.config.MessageConfig;
@@ -294,20 +297,20 @@ public class ViCommand implements CommandExecutor {
     }
 
     private void printList(CommandSender sender, List<String> list) {
-        MessageUtil.sendPlayerMessage(sender, "<YELLOW>lists :</YELLOW>");
+        MessageUtil.sendPlayerMessage(sender, "lists :", Color.YELLOW);
         if (list == null) {
             return;
         }
         for (String inventoryName : list) {
-            MessageUtil.sendPlayerMessage(sender, "<GREEN>" + inventoryName + "</GREEN>");
+            MessageUtil.sendPlayerMessage(sender, inventoryName, Color.GREEN);
         }
     }
 
     private void getName(CommandSender sender, String displayName) {
         Collection<? extends Player> onlinePlayers = Bukkit.getOnlinePlayers();
         for (Player player : onlinePlayers) {
-            if (player.getDisplayName().equalsIgnoreCase(displayName)) {
-                MessageUtil.sendPlayerMessage(sender, "<YELLOW>displayName : " + player.displayName() + "\nName : " + player.getName() + "</YELLOW>");
+            if (player.getName().equalsIgnoreCase(displayName)) {
+                MessageUtil.sendPlayerMessage(sender, "displayName : " + player.displayName() + "\nName : " + player.getName(), Color.YELLOW);
                 return;
             }
         }
@@ -328,10 +331,9 @@ public class ViCommand implements CommandExecutor {
     private void getHelp(CommandSender sender) {
         List<String> helpList = MessageConfig.getInstance().getHelp();
         if (helpList == null) {
-            //TODO
-            MessageUtil.sendPlayerMessage(sender, "무언가 잘못되었다!");
+            MessageUtil.sendPlayerMessage(sender, "무언가 잘못되었다!", Color.RED);
         }
-        for (String help : helpList) {
+        for (String help : Objects.requireNonNull(helpList)) {
             MessageUtil.sendPlayerMessage(sender, help);
         }
 
@@ -341,14 +343,14 @@ public class ViCommand implements CommandExecutor {
         if (!checkPermission(sender, "vi.admin")) {
             return;
         }
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> auto-save : </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getAutoSave() + "</AQUA>");
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> auto-save-time : </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getAutoSaveTime() + "</AQUA>");
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> save-messaging :  </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getSaveMessaging() + "</AQUA>");
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> save-message : </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getSaveMessage() + "</AQUA>");
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> load-messaging : </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getLoadMessaging() + "</AQUA>");
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> load-message : </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getLoadMessage() + "</AQUA>");
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> max-inventory : </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getMaxInventory() + "</AQUA>");
-        MessageUtil.sendPlayerMessage(sender, "<GREEN> save-once-per-several-times : </GREEN>" + "<AQUA>" + PluginConfig.getInstance().getSaveOncePerSeveralTimes() + "</AQUA>");
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("auto-save : ", Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getAutoSave().toString(),Color.AQUA));
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("auto-save-time : ",Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getAutoSaveTime().toString(),Color.AQUA));
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("save-messaging : ",Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getSaveMessaging().toString(),Color.AQUA));
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("save-message : ",Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getSaveMessage(),Color.AQUA));
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("load-messaging : ",Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getLoadMessaging().toString(),Color.AQUA));
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("load-message : ",Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getLoadMessage(),Color.AQUA));
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("max-inventory : ",Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getMaxInventory().toString(),Color.AQUA));
+        MessageUtil.sendPlayerMessage(sender, ColorUtil.colorText("save-once-per-several-times : ",Color.GREEN) + ColorUtil.colorText(PluginConfig.getInstance().getSaveOncePerSeveralTimes().toString(),Color.AQUA));
 
     }
 

@@ -1,11 +1,9 @@
 package org.lacraft.virtualinventory;
 
-import static org.lacraft.util.api.MessageUtil.sendConsoleMessage;
-
 import java.io.IOException;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.lacraft.util.api.ColorUtil.Color;
+import org.lacraft.util.api.MessageUtil;
 import org.lacraft.virtualinventory.command.ViCommand;
 import org.lacraft.virtualinventory.config.MessageConfig;
 import org.lacraft.virtualinventory.config.PluginConfig;
@@ -20,13 +18,13 @@ public final class LaVirtualInventory extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        sendConsoleMessage("&가상 인벤토리 서버 onLoad");
+        MessageUtil.sendConsoleMessage("가상 인벤토리 서버 onLoad", Color.GREEN);
         super.onLoad();
     }
 
     @Override
     public void onEnable() {
-        sendConsoleMessage("&가상 인벤토리 서버 onEnable");
+        MessageUtil.sendConsoleMessage("가상 인벤토리 서버 onEnable", Color.GREEN);
         super.onEnable();
         instance = this;
 
@@ -61,7 +59,7 @@ public final class LaVirtualInventory extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        sendConsoleMessage("&가상 인벤토리 서버 onDisable");
+        MessageUtil.sendConsoleMessage("가상 인벤토리 서버 onDisable", Color.GREEN);
         super.onDisable();
         try {
             VirtualInventoryManager.getInstance().saveAll(true);

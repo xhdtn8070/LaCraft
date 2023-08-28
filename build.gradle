@@ -17,7 +17,8 @@ group = 'org.lacraft'
 version = '1.0-SNAPSHOT'
 
 sourceCompatibility = '17' // java version
-targetCompatibility = '17' // java version
+targetCompatibility = '17' // java
+// version
 
 test {
     useJUnitPlatform()
@@ -43,10 +44,8 @@ subprojects {
 
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
-    }
+        options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
 
-    tasks.withType(JavaCompile) {
-        options.encoding = 'UTF-8'
     }
 
     dependencies {

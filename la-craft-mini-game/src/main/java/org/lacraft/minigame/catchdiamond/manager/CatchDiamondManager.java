@@ -1,7 +1,6 @@
 package org.lacraft.minigame.catchdiamond.manager;
 
 
-import dev.lone.itemsadder.api.CustomStack;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +22,9 @@ import org.lacraft.minigame.LaMiniGame;
 import org.lacraft.minigame.catchdiamond.domain.CatchDiamond;
 import org.lacraft.minigame.catchdiamond.domain.CatchDiamondBlock;
 import org.lacraft.minigame.catchdiamond.event.CatchDiamondEndEvent;
-import org.lacraft.util.api.ItemAdderUtil;
+import org.lacraft.util.api.ColorUtil;
+import org.lacraft.util.api.ColorUtil.Color;
+import org.lacraft.util.api.ItemsAdderUtil;
 import org.lacraft.util.api.MessageUtil;
 
 
@@ -61,14 +62,14 @@ public class CatchDiamondManager implements Listener, Runnable {
 
     public CatchDiamondManager() {
 
-        MessageUtil.sendConsoleMessage("<GREEN>CatchDiamondManager init...</GREEN>");
-        isNeedsIaZip = ItemAdderUtil.extractDefaultAssets(LaMiniGame.getInstance());
-        MessageUtil.sendConsoleMessage("<GREEN>CacheDiamondMange.isNeedsIaZip : " + isNeedsIaZip + "</GREEN>");
+        MessageUtil.sendConsoleMessage("CatchDiamondManager init...", Color.GREEN);
+        isNeedsIaZip = ItemsAdderUtil.extractDefaultAssets(LaMiniGame.getInstance());
+        MessageUtil.sendConsoleMessage("CacheDiamondMange.isNeedsIaZip : " + isNeedsIaZip, Color.GREEN);
 
         guiTitle = "Mini Game"; // GUI 타이틀
-        startMessage = "<YELLOW>Mini Game started!</YELLOW>"; // 게임 시작 메시지
-        endSuccessMessage = "<GREEN>Congratulations! You win!</GREEN>"; // 게임 성공 메시지
-        endFailMessage = "<RED>Game over! You lose!</RED>"; // 게임 실패 메시지
+        startMessage = ColorUtil.colorText("Mini Game started!", Color.YELLOW); // 게임 시작 메시지
+        endSuccessMessage = ColorUtil.colorText("Congratulations! You win!", Color.GREEN); // 게임 성공 메시지
+        endFailMessage = ColorUtil.colorText("Game over! You lose!", Color.RED); // 게임 실패 메시지
 
         games = new HashMap<>();
 
@@ -81,7 +82,7 @@ public class CatchDiamondManager implements Listener, Runnable {
 
         catchDiamondBlocks =
                 Arrays.asList(
-                        new CatchDiamondBlock(getCustomItemStack("customblock:ruby", new ItemStack(Material.DIAMOND)), 10, 2),
+                        new CatchDiamondBlock(ItemsAdderUtil.getCustomItemStack("customblock:ruby", new ItemStack(Material.DIAMOND)), 10, 2),
                         new CatchDiamondBlock(new ItemStack(Material.GOLD_INGOT, 1), 7, 4),
                         new CatchDiamondBlock(new ItemStack(Material.COAL, 1), 5, 5)
                 );
@@ -101,15 +102,6 @@ public class CatchDiamondManager implements Listener, Runnable {
 
         this.taskId = null;
         Bukkit.getPluginManager().registerEvents(this, LaMiniGame.getInstance());
-    }
-
-    private ItemStack getCustomItemStack(String namespacedID, ItemStack defaultItemStack) {
-        CustomStack customStack = CustomStack.getInstance(namespacedID);
-        if (customStack != null) {
-            return customStack.getItemStack();
-        } else {
-            return new ItemStack(defaultItemStack);
-        }
     }
 
     @Override
