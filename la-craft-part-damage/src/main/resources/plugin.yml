@@ -1,0 +1,8 @@
+name: la-craft-economy
+version: 1
+main: org.lacraft.partdamage.LaEconomy
+api-version: '1.20'
+depend: ['la-craft-util']
+commands:
+  record:
+    description: Record player's location and direction
