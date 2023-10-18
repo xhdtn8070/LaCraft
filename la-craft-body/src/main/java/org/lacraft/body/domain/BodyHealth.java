@@ -1,4 +1,4 @@
-package org.lacraft.partdamage.domain;
+package org.lacraft.body.domain;
 
 import lombok.Getter;
 import lombok.ToString;

@@ -1,9 +1,9 @@
-package org.lacraft.partdamage.manager;
+package org.lacraft.body.manager;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.Vector;
-import org.lacraft.partdamage.domain.BodyPart;
+import org.lacraft.body.domain.BodyPart;
 
 public class BodyPartChecker {
     private static final double YAW_CONSTANT = 1.5707963267948966D;

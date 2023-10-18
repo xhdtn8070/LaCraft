@@ -1,4 +1,4 @@
-package org.lacraft.partdamage.manager;
+package org.lacraft.body.manager;
 
 
 import java.util.Collections;
@@ -14,16 +14,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.lacraft.partdamage.LaPartDamage;
+import org.lacraft.body.LaBody;
 import org.lacraft.util.api.ColorUtil.Color;
 import org.lacraft.util.api.MessageUtil;
 
 
 @Getter
-public class LaPartRecordManager implements Listener, Runnable {
+public class LaBodyRecordManager implements Listener, Runnable {
 
     @Getter
-    private static final LaPartRecordManager instance = new LaPartRecordManager();
+    private static final LaBodyRecordManager instance = new LaBodyRecordManager();
 
     @Setter
     private boolean isNeedsIaZip;
@@ -40,7 +40,7 @@ public class LaPartRecordManager implements Listener, Runnable {
     public final int tick;
     private Integer taskId;
 
-    public LaPartRecordManager() {
+    public LaBodyRecordManager() {
 
         MessageUtil.sendConsoleMessage("CatchDiamondManager init...", Color.GREEN);
 
@@ -48,7 +48,7 @@ public class LaPartRecordManager implements Listener, Runnable {
         times = 5;
         tick = 20;
         this.taskId = null;
-        Bukkit.getPluginManager().registerEvents(this, LaPartDamage.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, LaBody.getInstance());
     }
 
     @Override
@@ -88,7 +88,7 @@ public class LaPartRecordManager implements Listener, Runnable {
 
     public void startRecord(List<Player> players) {
         if (Objects.isNull(taskId)) {
-            taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(LaPartDamage.getInstance(), this, 20L, 20L);
+            taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(LaBody.getInstance(), this, 20L, 20L);
         }
         for (Player player : players) {
             if (this.players.containsKey(player)) {

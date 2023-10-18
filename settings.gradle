@@ -1,7 +1,7 @@
 rootProject.name = 'LaCraft'
 include 'la-craft-util'
 include 'la-craft-economy'
-include 'la-craft-part-damage'
+include 'la-craft-body'
 include 'la-craft-virtual-inventory'
 include 'la-craft-mini-game'
 

@@ -3,7 +3,7 @@ dependencies {
 }
 
 shadowJar {
-    archiveBaseName.set('la-craft-part-damage')
+    archiveBaseName.set('la-craft-body')
     archiveVersion.set('0.1')  // Remove the version from the jar name
     archiveClassifier.set(null)  // Remove the classifier from the jar name
 }

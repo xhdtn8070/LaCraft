@@ -1,4 +1,4 @@
-package org.lacraft.partdamage.command;
+package org.lacraft.body.command;
 
 import java.util.Objects;
 import lombok.Getter;
@@ -7,18 +7,18 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.lacraft.partdamage.LaPartDamage;
-import org.lacraft.partdamage.manager.LaPartRecordManager;
+import org.lacraft.body.LaBody;
+import org.lacraft.body.manager.LaBodyRecordManager;
 import org.lacraft.util.api.ColorUtil.Color;
 import org.lacraft.util.api.MessageUtil;
 
 
-public class LaPartRecordCommand implements CommandExecutor {
+public class LaBodyRecordCommand implements CommandExecutor {
     @Getter
-    private static final LaPartRecordCommand instance = new LaPartRecordCommand();
+    private static final LaBodyRecordCommand instance = new LaBodyRecordCommand();
 
-    private LaPartRecordCommand() {
-        Objects.requireNonNull(LaPartDamage.getInstance().getCommand("part")).setExecutor(this);
+    private LaBodyRecordCommand() {
+        Objects.requireNonNull(LaBody.getInstance().getCommand("part")).setExecutor(this);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class LaPartRecordCommand implements CommandExecutor {
                 return true;
             } else {
                 // sender가 플레이어인 경우 게임을 시작합니다.
-                LaPartRecordManager.getInstance().startRecord((Player) sender);
+                LaBodyRecordManager.getInstance().startRecord((Player) sender);
                 return true;
             }
         }
@@ -42,7 +42,7 @@ public class LaPartRecordCommand implements CommandExecutor {
                 return true;
             } else {
                 // sender가 플레이어인 경우 게임을 시작합니다.
-                LaPartRecordManager.getInstance().stopRecord((Player) sender);
+                LaBodyRecordManager.getInstance().stopRecord((Player) sender);
                 return false;
             }
         }

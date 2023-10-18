@@ -1,4 +1,4 @@
-package org.lacraft.partdamage.manager;
+package org.lacraft.body.manager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,8 +13,8 @@ import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
-import org.lacraft.partdamage.LaPartDamage;
-import org.lacraft.partdamage.domain.BodyHealth;
+import org.lacraft.body.LaBody;
+import org.lacraft.body.domain.BodyHealth;
 
 @Getter
 public class BodyPartManager implements Listener{
@@ -25,7 +25,7 @@ public class BodyPartManager implements Listener{
     private static final Map<Player, BodyHealth> playerBodyHealthMap = new HashMap<>();
 
     private BodyPartManager() {
-        Bukkit.getPluginManager().registerEvents(this, LaPartDamage.getInstance());
+        Bukkit.getPluginManager().registerEvents(this, LaBody.getInstance());
 
         this.initPlayerBodyHealth();
     }
@@ -48,7 +48,7 @@ public class BodyPartManager implements Listener{
                 }
             }
         };
-        healthCheckRunnable.runTaskTimer(LaPartDamage.getInstance(), 1L, 1L);
+        healthCheckRunnable.runTaskTimer(LaBody.getInstance(), 1L, 1L);
     }
 
     private void processPlayerHealth(Player player, BodyHealth health) {
